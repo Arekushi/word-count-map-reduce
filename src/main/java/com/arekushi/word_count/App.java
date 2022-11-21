@@ -17,7 +17,6 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class App {
     public static class TextArrayWritable extends ArrayWritable {
@@ -66,7 +65,7 @@ public class App {
 
     public static class Reduce extends Reducer<Text, TextArrayWritable, NullWritable, Text> {
 
-        private final HashSet stopWords = new HashSet(Arrays.asList(StopWords.STOP_WORDS));
+        private final HashSet<String> stopWords = new HashSet<String>(Arrays.asList(StopWords.STOP_WORDS));
 
         public void reduce(
                 Text key,
@@ -75,7 +74,7 @@ public class App {
         ) throws IOException, InterruptedException {
             JSONObject jsonObj = new JSONObject();
             JSONArray wordsJsonArray = new JSONArray();
-            HashMap<Text, Integer> wordCount = new HashMap<Text, Integer>();
+            LinkedHashMap<Text, Integer> wordCount = new LinkedHashMap<Text, Integer>();
 
             for (ArrayWritable array : values) {
                 for (Writable value : array.get()) {
@@ -91,16 +90,7 @@ public class App {
                 }
             }
 
-            LinkedHashMap<Text, Integer> sortedWordCount = wordCount.entrySet()
-                    .stream()
-                    .sorted(java.util.Map.Entry.comparingByValue())
-                    .collect(Collectors.toMap(
-                            java.util.Map.Entry::getKey,
-                            java.util.Map.Entry::getValue,
-                            (oldValue, newValue) -> oldValue, LinkedHashMap::new
-                    ));
-
-            sortedWordCount.forEach((k, v) -> {
+            wordCount.forEach((k, v) -> {
                 JSONObject obj = new JSONObject();
                 obj.put(k.toString(), v);
                 wordsJsonArray.add(obj);

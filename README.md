@@ -20,6 +20,8 @@ A ideia do projeto é realizar o processo de contagem de palavras, utilizando de
 <br><br>
 O MapReduce é um modelo de programação que permite o processamento de dados massivos em um algoritmo paralelo e distribuído,
 geralmente em um cluster de computadores.
+<br><br>
+Link para a atividade que foi realizada: [atividade][atividade_url]
 
 
 ## Built With
@@ -39,7 +41,7 @@ For the use of the project, some prerequisites will be necessary.
   2. Here is a step-by-step installation tutorial. [(Tutorial)][docker_tutorial_url]
 * Maven
   1. You can download here: [Maven][maven_url]
-  2. Here is a step-by-step installation tutorial. [(Tutorial)][maven_tutorial_url] 
+  2. Here is a step-by-step installation tutorial. [(Tutorial)][maven_tutorial_url]
 
 <br>
 
@@ -135,6 +137,8 @@ For the use of the project, some prerequisites will be necessary.
 [maven_tutorial_url]: https://phoenixnap.com/kb/install-maven-windows
 [java_url]: https://www.oracle.com/br/java/technologies/javase/javase8-archive-downloads.html
 [java_tutorial_url]: https://shaileshjha.com/step-by-step-how-to-download-and-install-java-se-jdk-8-on-windows-10/
+
+[atividade_url]: https://arekushi.notion.site/Atividade-Map-Reduce-55e4e0e8037b4bcfadb8aa54c3dc51ee
 
 <!-- Acknowledgments -->
 [docker_hadoop_tutorial_video]: https://www.youtube.com/watch?v=dLTI2HN9Ejg
