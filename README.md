@@ -23,15 +23,94 @@ geralmente em um cluster de computadores.
 
 
 ## Built With
-- [Java 11][java11]
+- [Java 8][java8]
 - [Docker v20.10.8][docker]
 - [Apache Maven 3.8.6][maven]
 
 ## Getting Started
 For the use of the project, some prerequisites will be necessary.
 
+### Prerequisites (Windows)
+* Java 8
+  1. You can download here: [Java][java_url]
+  2. Here is a step-by-step installation tutorial. [(Tutorial)][java_tutorial_url]
+* Docker
+  1. You can download here: [Docker][docker_url]
+  2. Here is a step-by-step installation tutorial. [(Tutorial)][docker_tutorial_url]
+* Maven
+  1. You can download here: [Maven][maven_url]
+  2. Here is a step-by-step installation tutorial. [(Tutorial)][maven_tutorial_url] 
+
+<br>
+
+### Installation and usage
+1. Clone the repository to create the containers
+    ```sh
+    git clone https://github.com/big-data-europe/docker-hadoop.git
+    ```
+2. Inside the repository folder, run:
+    ```sh
+    docker compose up -d
+    ```
+3. Copy all data files to `/tmp` container folder:
+    ```sh
+    docker cp ./src/main/resources/data/ namenode:/tmp/data/
+    ```
+4. Let's compile our project to create a `.jar` file
+    ```sh
+    mvn clean install
+    ```
+5. If all goes well, we will copy the `.jar` file to our container
+    ```sh
+    docker cp ./target/word-count-map-reduce-1.0-SNAPSHOT.jar namenode:/tmp/
+    ```
+6. Create a new terminal and run:
+    ```sh
+    docker exec -it namenode /bin/bash
+    ```
+7. Create `user/root` folder
+    ```sh
+    hdfs dfs -mkdir -p /user/root
+    ```
+8. Create `input` folder
+    ```sh
+    hdfs dfs -mkdir /user/root/input
+    ```
+9. Now put `data` files into `input` folder
+    ```sh
+    hdfs dfs -put /tmp/data/ /user/root/input
+    ```
+10. Execute `.jar` file and wait to complete the process
+    ```sh
+    hadoop jar /tmp/word-count-map-reduce-1.0-SNAPSHOT.jar input/data output
+    ```
+11. When finished, we will copy the content to a `.json` file
+    ```sh
+    hdfs dfs -cat /user/root/output/part-r-00000 > /tmp/output.json
+    ```
+12. Finally, let's exit the container's terminal
+    ```sh
+    exit
+    ```
+13. Let's copy the output.json file to our machine
+    ```sh
+    docker cp namenode:/tmp/output.json ./src/main/resources/result
+    ```
+14. Done, the whole process has been completed 🎉
+
+<br>
+
 ## Roadmap
 - [x] Create Docker Container
+- [x] Create Map Java Class
+  - [x] Split Line
+  - [x] Remove Accent
+  - [x] Put the words inside a single object
+- [x] Create Reduce Java Class
+  - [x] Sum repeated words
+  - [x] Return JSON object
+- [x] Copy data to Docker Container
+- [x] Run
 
 ## Acknowledgments
 * [Building Hadoop Cluster Using Docker | Apache Hadoop Cluster Using Docker Compose][docker_hadoop_tutorial_video]
@@ -42,13 +121,20 @@ For the use of the project, some prerequisites will be necessary.
 | :---: |
 
 <!-- [Build With] -->
-[java11]: https://www.oracle.com/br/java/technologies/javase/jdk11-archive-downloads.html
+[java8]: https://www.oracle.com/br/java/technologies/javase/javase8-archive-downloads.html
 [docker]: https://docs.docker.com/engine/release-notes/
 [maven]: https://maven.apache.org/download.cgi
 
 <!-- [Some links] -->
 [fatec_ipiranga]: https://fatecipiranga.edu.br/
 [big_data_course]: https://fatecipiranga.edu.br/curso-superior-de-tecnologia-em-big-data-para-negocios/
+
+[docker_url]: https://www.docker.com/products/docker-desktop/
+[docker_tutorial_url]: https://runnable.com/docker/install-docker-on-windows-10
+[maven_url]: https://maven.apache.org/download.cgi
+[maven_tutorial_url]: https://phoenixnap.com/kb/install-maven-windows
+[java_url]: https://www.oracle.com/br/java/technologies/javase/javase8-archive-downloads.html
+[java_tutorial_url]: https://shaileshjha.com/step-by-step-how-to-download-and-install-java-se-jdk-8-on-windows-10/
 
 <!-- Acknowledgments -->
 [docker_hadoop_tutorial_video]: https://www.youtube.com/watch?v=dLTI2HN9Ejg
